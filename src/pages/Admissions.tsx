@@ -3,14 +3,70 @@ import AnimatedSection from "@/components/AnimatedSection";
 import SectionHeading from "@/components/SectionHeading";
 import { Check } from "lucide-react";
 import heroBg from "../assets/hero-campus.jpg";
+import { submitAdmissionApplication } from "@/lib/admissionsService";
+import { toast } from "sonner";
 
 const steps = ["Personal Info", "Documents", "Review"];
+
+const requiredDocs = ["10th Marksheet", "12th Marksheet", "ID Proof (Aadhar/PAN)", "Passport Size Photo"];
 
 const Admissions = () => {
   const [step, setStep] = useState(0);
   const [form, setForm] = useState({ name: "", email: "", phone: "", dob: "", course: "", address: "" });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uploadedDocs, setUploadedDocs] = useState<Record<string, boolean>>({});
 
   const update = (k: string, v: string) => setForm({ ...form, [k]: v });
+
+  const markDocUploaded = (docLabel: string) => {
+    setUploadedDocs((prev) => ({ ...prev, [docLabel]: true }));
+  };
+
+  const handleSubmit = async () => {
+    if (isSubmitting) return;
+
+    // Final validation before submit
+    if (!form.name || !form.email || !form.phone || !form.dob || !form.course) {
+      toast.error("Please fill all required fields before submitting.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      await submitAdmissionApplication(form);
+      toast.success("Application submitted successfully!");
+      setForm({ name: "", email: "", phone: "", dob: "", course: "", address: "" });
+      setStep(0);
+    } catch {
+      toast.error("Could not submit application. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleNext = () => {
+    // Step‑wise validation
+    if (step === 0) {
+      if (!form.name || !form.email || !form.phone || !form.dob || !form.course) {
+        toast.error("Please complete all required details before continuing.");
+        return;
+      }
+    }
+
+    if (step === 1) {
+      const allDocsUploaded = requiredDocs.every((doc) => uploadedDocs[doc]);
+      if (!allDocsUploaded) {
+        toast.error("Please upload all required documents before continuing.");
+        return;
+      }
+    }
+
+    if (step < 2) {
+      setStep(step + 1);
+    } else {
+      void handleSubmit();
+    }
+  };
 
   return (
     <div className="pt-24">
@@ -67,12 +123,12 @@ const Admissions = () => {
                   <label className="text-sm font-medium mb-2 block">Preferred Course *</label>
                   <select value={form.course} onChange={(e) => update("course", e.target.value)} className="w-full px-4 py-3 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-gold">
                     <option value="">Select a course</option>
-                    <option>BRS</option>
-                    <option>BRS</option>
-                    <option>BRS</option>
-                    <option>BRS</option>
-                    <option>BRS</option>
-                    <option>BRS</option>
+                    <option>ABC</option>
+                    <option>XYZ</option>
+                    <option>PQR</option>
+                    <option>MBA</option>
+                    <option>BBA</option>
+                    <option>BCA</option>
                   </select>
                 </div>
                 <div className="sm:col-span-2">
@@ -85,7 +141,7 @@ const Admissions = () => {
             {step === 1 && (
               <div className="space-y-6">
                 <p className="text-muted-foreground mb-6">Upload the following documents (PDF or image format):</p>
-                {["10th Marksheet", "12th Marksheet", "ID Proof (Aadhar/PAN)", "Passport Size Photo"].map((doc) => (
+                {requiredDocs.map((doc) => (
                   <div key={doc} className="flex items-center gap-4 p-4 rounded-lg border bg-background">
                     <div className="flex-1">
                       <p className="font-medium text-sm">{doc}</p>
@@ -93,7 +149,15 @@ const Admissions = () => {
                     </div>
                     <label className="px-4 py-2 rounded-lg bg-secondary text-sm font-medium cursor-pointer hover:bg-muted transition-colors">
                       Choose File
-                      <input type="file" className="hidden" />
+                      <input
+                        type="file"
+                        className="hidden"
+                        onChange={(e) => {
+                          if (e.target.files && e.target.files.length > 0) {
+                            markDocUploaded(doc);
+                          }
+                        }}
+                      />
                     </label>
                   </div>
                 ))}
@@ -122,10 +186,11 @@ const Admissions = () => {
                 </button>
               )}
               <button
-                onClick={() => step < 2 ? setStep(step + 1) : alert("Application submitted!")}
-                className="px-8 py-3 rounded-lg gold-gradient text-primary font-semibold ml-auto hover:opacity-90 transition-opacity"
+                onClick={handleNext}
+                disabled={isSubmitting}
+                className="px-8 py-3 rounded-lg gold-gradient text-primary font-semibold ml-auto hover:opacity-90 transition-opacity disabled:opacity-70"
               >
-                {step < 2 ? "Next Step" : "Submit Application"}
+                {step < 2 ? "Next Step" : isSubmitting ? "Submitting..." : "Submit Application"}
               </button>
             </div>
           </div>

@@ -1,16 +1,4 @@
-import { db, storage } from "@/firebase";
-import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  getDocs,
-  orderBy,
-  query,
-  Timestamp,
-  updateDoc,
-} from "firebase/firestore";
-import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { supabase } from "@/supabaseClient";
 
 export type NewsItem = {
   id: string;
@@ -30,53 +18,69 @@ export type NewsPayload = {
   imageFile?: File | null;
 };
 
-const collectionRef = collection(db, "news");
-
 const uploadImage = async (file?: File | null) => {
   if (!file) return { imageUrl: undefined as string | undefined, imagePath: undefined as string | undefined };
 
   const imagePath = `news/${Date.now()}-${file.name}`;
-  const storageRef = ref(storage, imagePath);
-  await uploadBytes(storageRef, file);
-  const imageUrl = await getDownloadURL(storageRef);
+  const { data, error } = await supabase.storage.from("news").upload(imagePath, file);
+  if (error) {
+    throw error;
+  }
+  const {
+    data: { publicUrl },
+  } = supabase.storage.from("news").getPublicUrl(data.path);
+  const imageUrl = publicUrl;
   return { imageUrl, imagePath };
 };
 
 export const fetchNews = async (): Promise<NewsItem[]> => {
-  const q = query(collectionRef, orderBy("publishedAt", "desc"));
-  const snapshot = await getDocs(q);
+  const { data, error } = await supabase
+    .from("news")
+    .select("id, title, description, imageUrl, imagePath, publishedAt, createdAt, updatedAt")
+    .order("publishedAt", { ascending: false });
 
-  return snapshot.docs.map((docSnap) => {
-    const data = docSnap.data();
-    return {
-      id: docSnap.id,
-      title: data.title || "",
-      description: data.description || "",
-      imageUrl: data.imageUrl,
-      imagePath: data.imagePath,
-      publishedAt: data.publishedAt?.toDate?.() || new Date(),
-      createdAt: data.createdAt?.toDate?.(),
-      updatedAt: data.updatedAt?.toDate?.(),
-    } as NewsItem;
-  });
+  if (error) {
+    throw error;
+  }
+
+  return (
+    data?.map((row) => ({
+      id: row.id,
+      title: row.title || "",
+      description: row.description || "",
+      imageUrl: row.imageUrl || undefined,
+      imagePath: row.imagePath || undefined,
+      publishedAt: row.publishedAt ? new Date(row.publishedAt) : new Date(),
+      createdAt: row.createdAt ? new Date(row.createdAt) : undefined,
+      updatedAt: row.updatedAt ? new Date(row.updatedAt) : undefined,
+    })) ?? []
+  );
 };
 
 export const createNews = async (payload: NewsPayload): Promise<NewsItem> => {
   const now = new Date();
   const { imageUrl, imagePath } = await uploadImage(payload.imageFile || undefined);
 
-  const docRef = await addDoc(collectionRef, {
-    title: payload.title,
-    description: payload.description,
-    imageUrl: imageUrl || null,
-    imagePath: imagePath || null,
-    publishedAt: Timestamp.fromDate(payload.publishedAt || now),
-    createdAt: Timestamp.fromDate(now),
-    updatedAt: Timestamp.fromDate(now),
-  });
+  const { data, error } = await supabase
+    .from("news")
+    .insert({
+      title: payload.title,
+      description: payload.description,
+      imageUrl: imageUrl || null,
+      imagePath: imagePath || null,
+      publishedAt: (payload.publishedAt || now).toISOString(),
+      createdAt: now.toISOString(),
+      updatedAt: now.toISOString(),
+    })
+    .select("id")
+    .single();
+
+  if (error) {
+    throw error;
+  }
 
   return {
-    id: docRef.id,
+    id: data.id,
     title: payload.title,
     description: payload.description,
     imageUrl: imageUrl || undefined,
@@ -101,7 +105,7 @@ export const updateNews = async (
     imagePath = uploaded.imagePath;
 
     if (existing?.imagePath) {
-      await deleteObject(ref(storage, existing.imagePath)).catch(() => undefined);
+      await supabase.storage.from("news").remove([existing.imagePath]).catch(() => undefined);
     }
   }
 
@@ -110,11 +114,14 @@ export const updateNews = async (
     description: payload.description,
     imageUrl: imageUrl || null,
     imagePath: imagePath || null,
-    publishedAt: Timestamp.fromDate(payload.publishedAt),
-    updatedAt: Timestamp.fromDate(new Date()),
+    publishedAt: payload.publishedAt.toISOString(),
+    updatedAt: new Date().toISOString(),
   };
 
-  await updateDoc(doc(collectionRef, id), update);
+  const { error } = await supabase.from("news").update(update).eq("id", id);
+  if (error) {
+    throw error;
+  }
 
   return {
     id,
@@ -129,7 +136,7 @@ export const updateNews = async (
 
 export const deleteNews = async (item: NewsItem) => {
   if (item.imagePath) {
-    await deleteObject(ref(storage, item.imagePath)).catch(() => undefined);
+    await supabase.storage.from("news").remove([item.imagePath]).catch(() => undefined);
   }
-  await deleteDoc(doc(collectionRef, item.id));
+  await supabase.from("news").delete().eq("id", item.id);
 };

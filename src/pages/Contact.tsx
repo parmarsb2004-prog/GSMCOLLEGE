@@ -8,9 +8,9 @@ const Contact = () => {
   const update = (k: string, v: string) => setForm({ ...form, [k]: v });
 
   const contactInfo = [
-    { icon: MapPin, title: "Address", detail: "BRS, Mahila Gram Vidhyapith, Nardipur" },
+    { icon: MapPin, title: "Address", detail: "Mahila Gram Vidhyapith,Nardipur,Ta.:Kalol-382735,Dist.:Gandhinagar" },
     { icon: Phone, title: "Phone", detail: "+91 7436038016" },
-    { icon: Mail, title: "Email", detail: "parmarsb2004@gmail.com" },
+    { icon: Mail, title: "Email", detail: "gramsevamandir7@gmail.com" },
     { icon: Clock, title: "Office Hours", detail: "Mon - Sat: 9:00 AM - 5:00 PM" },
   ];
 

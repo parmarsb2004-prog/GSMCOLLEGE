@@ -18,11 +18,11 @@ const stats = [
 ];
 
 const courses = [
-  { title: "Bachelor of Rural Science", dept: "Home Science Management", duration: "3 Years", icon: "📚" },
-  { title: "Bachelor of Rural Science", dept: "Farm Management", duration: "3 Years", icon: "🔬" },
-  { title: "Bachelor of Rural Science", dept: "Mahila Gram VIdhyapeeth", duration: "3 Years", icon: "📊" },
-  { title: "Bachelor of Rural Science", dept: "Bhagini Vidhyalaya", duration: "2 Years", icon: "✍️" },
-  { title: "Bachelor of Rural Science", dept: "Prayogik Prathamik Shala", duration: "2 Years", icon: "📐" },
+  { title: "Home Science Management", dept: "BRS", duration: "3 Years", icon: "📚" },
+  { title: "Farm Management", dept: "BRS", duration: "3 Years", icon: "🔬" },
+  { title: "BBA", dept: "BRS", duration: "4 Years", icon: "📊" },
+  { title: "MBA", dept: "BRS", duration: "4 Years", icon: "✍️" },
+  { title: "BCA", dept: "BRS", duration: "4 Years", icon: "📐" },
 ];
 
 const testimonials = [

@@ -56,10 +56,10 @@ const Footer = () => (
             {[
               "Home Science Management",
               "Farm Management",
-              "Mahila Gram Vidyapith Nardipur",
-              "Bhagini Vidhyalaya",
-              "B.R. Maheta Vidhyalay",
-              "Prayogik Prathamik Shala"
+              "Up-Coming Courses",
+              "BBA",
+              "MBA",
+              "BCA",
             ].map((d) => (
               <Link key={d} to="/departments" className="text-sm text-primary-foreground/60 hover:text-vibrant-gold transition-colors">
                 {d}
@@ -73,7 +73,7 @@ const Footer = () => (
           <div className="flex flex-col gap-4">
             <div className="flex items-start gap-3 text-primary-foreground/60">
               <MapPin className="w-4 h-4 text-vibrant-gold mt-1 shrink-0" />
-              <span className="text-sm">BRS, Mahila Gram Vidhyapith, Nardipur</span>
+              <span className="text-sm">Mahila Gram Vidhyapith,Nardipur,Ta.:Kalol-382735,Dist.:Gandhinagar</span>
             </div>
             <div className="flex items-center gap-3 text-primary-foreground/60">
               <Phone className="w-4 h-4 text-vibrant-gold shrink-0" />
@@ -81,7 +81,7 @@ const Footer = () => (
             </div>
             <div className="flex items-center gap-3 text-primary-foreground/60">
               <Mail className="w-4 h-4 text-vibrant-gold shrink-0" />
-              <a href="mailto:parmarsb2004@gmail.com" className="text-sm hover:text-vibrant-gold transition-colors">parmarsb2004@gmail.com</a>
+              <a href="mailto:parmarsb2004@gmail.com" className="text-sm hover:text-vibrant-gold transition-colors">gramsevamandir7@gmail.com</a>
             </div>
           </div>
         </div>

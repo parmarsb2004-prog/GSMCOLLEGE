@@ -18,6 +18,7 @@ import {
   Image as ImageIcon,
 } from "lucide-react";
 import { createNews, deleteNews, fetchNews, NewsItem, updateNews } from "@/lib/newsService";
+import { fetchRecentStudents, Student } from "@/lib/studentsService";
 
 const formatDateDisplay = (date?: Date) =>
   date ? new Intl.DateTimeFormat("en-IN", { dateStyle: "medium" }).format(date) : "";
@@ -26,7 +27,7 @@ const formatDateInput = (date?: Date) =>
   date ? date.toISOString().split("T")[0] : "";
 
 const AdminDashboard = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, createAdmin } = useAuth();
   const queryClient = useQueryClient();
 
   const [formState, setFormState] = useState({
@@ -37,9 +38,17 @@ const AdminDashboard = () => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
 
+  const [adminForm, setAdminForm] = useState({ name: "", email: "", password: "" });
+  const [isCreatingAdmin, setIsCreatingAdmin] = useState(false);
+
   const { data: newsItems = [], isLoading: isNewsLoading } = useQuery<NewsItem[]>({
     queryKey: ["news"],
     queryFn: fetchNews,
+  });
+
+  const { data: students = [], isLoading: isStudentsLoading } = useQuery<Student[]>({
+    queryKey: ["students_recent"],
+    queryFn: fetchRecentStudents,
   });
 
   const createMutation = useMutation({
@@ -103,6 +112,23 @@ const AdminDashboard = () => {
 
   const handleDelete = (item: NewsItem) => {
     deleteMutation.mutate(item);
+  };
+
+  const handleCreateAdmin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!adminForm.name.trim() || !adminForm.email.trim() || adminForm.password.length < 6) return;
+
+    setIsCreatingAdmin(true);
+    const ok = await createAdmin({
+      name: adminForm.name.trim(),
+      email: adminForm.email.trim(),
+      password: adminForm.password,
+    });
+    setIsCreatingAdmin(false);
+
+    if (ok) {
+      setAdminForm({ name: "", email: "", password: "" });
+    }
   };
 
   const stats = useMemo(
@@ -189,56 +215,87 @@ const AdminDashboard = () => {
                   </tr>
                 </thead>
                 <tbody className="text-sm">
-                  {[
-                    { name: "Rahul Sharma", id: "MGV2024001", course: "B.R.S. (Farm Management)", status: "Active" },
-                    { name: "Priya Patel", id: "MGV2024002", course: "B.R.S. (Home Science)", status: "Active" },
-                    { name: "Amit Kumar", id: "MGV2024003", course: "P.T.C.", status: "Pending Verification" },
-                    { name: "Sneha Desai", id: "MGV2024004", course: "B.R.S. (Home Science)", status: "Active" },
-                  ].map((student, i) => (
-                    <tr key={i} className="border-b border-border/50 hover:bg-secondary/20 transition-colors">
-                      <td className="p-4 font-medium text-navy">{student.name}</td>
-                      <td className="p-4 text-muted-foreground">{student.id}</td>
-                      <td className="p-4 text-muted-foreground">{student.course}</td>
-                      <td className="p-4">
-                        <span
-                          className={`px-2.5 py-1 rounded-full text-xs font-medium ${
-                            student.status === "Active"
-                              ? "bg-green-100 text-green-700"
-                              : "bg-yellow-100 text-yellow-700"
-                          }`}
-                        >
-                          {student.status}
-                        </span>
+                  {isStudentsLoading && (
+                    <tr>
+                      <td colSpan={4} className="p-4 text-muted-foreground">
+                        Loading recent students...
                       </td>
                     </tr>
-                  ))}
+                  )}
+                  {!isStudentsLoading && students.length === 0 && (
+                    <tr>
+                      <td colSpan={4} className="p-4 text-muted-foreground">
+                        No student registrations yet.
+                      </td>
+                    </tr>
+                  )}
+                  {!isStudentsLoading &&
+                    students.map((student) => (
+                      <tr key={student.id} className="border-b border-border/50 hover:bg-secondary/20 transition-colors">
+                        <td className="p-4 font-medium text-navy">{student.name}</td>
+                        <td className="p-4 text-muted-foreground">{student.enrollmentNumber || "-"}</td>
+                        <td className="p-4 text-muted-foreground">{student.course || "-"}</td>
+                        <td className="p-4">
+                          <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
+                            Active
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             </div>
           </div>
 
-          {/* Quick Actions */}
+          {/* Admin Management */}
           <div className="bg-white p-6 rounded-xl shadow-sm border border-border">
-            <h3 className="text-lg font-bold text-navy mb-4">Quick Actions</h3>
-            <div className="space-y-3">
-              {[
-                { label: "Add New Student", desc: "Manually register student" },
-                { label: "Manage Courses", desc: "Update curriculum details" },
-                { label: "Generate Reports", desc: "Download excel/pdf reports" },
-                { label: "Site Settings", desc: "Update homepage content" },
-              ].map((action, i) => (
-                <button
-                  key={i}
-                  className="w-full flex items-center justify-between p-3 border border-border rounded-lg hover:border-vibrant-gold hover:bg-secondary/50 transition-all text-left group"
-                >
-                  <div>
-                    <p className="font-semibold text-navy group-hover:text-vibrant-gold transition-colors">{action.label}</p>
-                    <p className="text-xs text-muted-foreground">{action.desc}</p>
-                  </div>
-                  <Plus className="w-5 h-5 text-muted-foreground group-hover:text-vibrant-gold transition-colors" />
-                </button>
-              ))}
-            </div>
+            <h3 className="text-lg font-bold text-navy mb-2">Admin Management</h3>
+            <p className="text-xs text-muted-foreground mb-4">
+              Create a new admin login with email and password.
+            </p>
+            <form className="space-y-3" onSubmit={handleCreateAdmin}>
+              <div>
+                <label className="block text-xs font-semibold text-navy mb-1">Full Name</label>
+                <input
+                  value={adminForm.name}
+                  onChange={(e) => setAdminForm((s) => ({ ...s, name: e.target.value }))}
+                  className="w-full px-3 py-2 rounded-lg border border-border bg-secondary/40 focus:outline-none focus:ring-2 focus:ring-vibrant-gold text-sm"
+                  placeholder="Admin name"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-navy mb-1">Email</label>
+                <input
+                  type="email"
+                  value={adminForm.email}
+                  onChange={(e) => setAdminForm((s) => ({ ...s, email: e.target.value }))}
+                  className="w-full px-3 py-2 rounded-lg border border-border bg-secondary/40 focus:outline-none focus:ring-2 focus:ring-vibrant-gold text-sm"
+                  placeholder="admin@example.com"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-navy mb-1">Password</label>
+                <input
+                  type="password"
+                  value={adminForm.password}
+                  onChange={(e) => setAdminForm((s) => ({ ...s, password: e.target.value }))}
+                  className="w-full px-3 py-2 rounded-lg border border-border bg-secondary/40 focus:outline-none focus:ring-2 focus:ring-vibrant-gold text-sm"
+                  placeholder="At least 6 characters"
+                  required
+                  minLength={6}
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={isCreatingAdmin}
+                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg bg-navy text-white text-sm font-semibold hover:bg-navy/90 disabled:opacity-70 transition-colors"
+              >
+                {isCreatingAdmin ? "Creating admin..." : "Create Admin"}
+                {!isCreatingAdmin && <Plus className="w-4 h-4" />}
+              </button>
+            </form>
           </div>
         </div>
 

@@ -10,13 +10,11 @@ const StudentLogin = () => {
   const [emailOrEnrollment, setEmailOrEnrollment] = useState("");
   const [password, setPassword] = useState("");
   const { login } = useAuth();
-  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    await login({ emailOrEnrollment, password }, "student");
-    setIsLoading(false);
+    // Fire and forget; AuthContext will handle navigation or errors via toasts
+    void login({ emailOrEnrollment, password }, "student");
   };
 
   return (
@@ -88,17 +86,10 @@ const StudentLogin = () => {
 
               <button
                 type="submit"
-                disabled={isLoading}
-                className="w-full flex justify-center items-center gap-2 py-3 px-4 rounded-lg gold-gradient text-navy font-bold hover:shadow-lg hover:opacity-90 transition-all disabled:opacity-70"
+                className="w-full flex justify-center items-center gap-2 py-3 px-4 rounded-lg gold-gradient text-navy font-bold hover:shadow-lg hover:opacity-90 transition-all"
               >
-                {isLoading ? (
-                  <span className="animate-pulse">Logging in...</span>
-                ) : (
-                  <>
-                    <span>Login securely</span>
-                    <LogIn className="w-5 h-5" />
-                  </>
-                )}
+                <span>Login securely</span>
+                <LogIn className="w-5 h-5" />
               </button>
             </form>
 

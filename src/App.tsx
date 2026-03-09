@@ -25,6 +25,7 @@ import ForgotPassword from "./pages/auth/ForgotPassword";
 import StudentDashboard from "./pages/dashboard/StudentDashboard";
 import AdminDashboard from "./pages/dashboard/AdminDashboard";
 import { Navigate } from "react-router-dom";
+import ResetPassword from "./pages/auth/ResetPassword";
 
 const PrivateRoute = ({ children, allowedRole }: { children: JSX.Element, allowedRole: "student" | "admin" }) => {
   const { user, role } = useAuth();
@@ -60,6 +61,7 @@ const App = () => (
             <Route path="/admin-login" element={<AdminLogin />} />
             <Route path="/signup" element={<StudentSignup />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
 
             {/* Dashboard Routes */}
             <Route 

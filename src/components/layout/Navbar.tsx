@@ -52,7 +52,7 @@ const Navbar = () => {
               <img src={logoImg} alt="Gramseva Mandir Logo" className="w-full h-full object-contain" />
             </div>
             <div>
-              <h1 className="font-heading text-lg font-bold text-vibrant-gold leading-tight drop-shadow-md">Mahila Gram Vidhyapith</h1>
+              <h1 className="font-heading text-lg font-bold text-vibrant-gold leading-tight drop-shadow-md">Mahila Gram Seva Mandir</h1>
               <p className="text-xs text-vibrant-gold/80 tracking-widest uppercase font-semibold">Nardipur</p>
             </div>
           </Link>
