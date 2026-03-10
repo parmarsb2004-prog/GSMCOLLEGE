@@ -23,14 +23,14 @@ interface FacultyMember {
 
 const facultyData: FacultyMember[] = [
   {
-    name: "Manjulaben J Padvi",
+    name: "Ms. Manjulaben J Padvi",
     role: "Incharge Principal",
     qualification: "BRS, MA, GBTC",
     dept: "Academic Administration",
     image: manjulabenImg
   },
   {
-    name: "Uday I Nayak",
+    name: "Mr. Uday I Nayak",
     role: "Faculty Member",
     qualification: "BA, MA, B.Ed (English)",
     dept: "Language Arts",
@@ -77,7 +77,7 @@ const facultyData: FacultyMember[] = [
     image: kanubhaiImg
   },
   {
-    name: "Mukeshbhai G Parmar",
+    name: "Mr. Mukeshbhai G Parmar",
     role: "Peon",
     dept: "Support Staff",
     image: mukeshbhaiImg

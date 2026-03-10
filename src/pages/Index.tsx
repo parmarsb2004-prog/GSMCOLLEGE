@@ -85,11 +85,14 @@ const Index = () => {
         </div>
         <div className="relative container-wide text-center z-10 pt-20">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-            <span className="inline-block text-gold font-semibold tracking-widest text-sm uppercase mb-4">
+            <p className="text-gold text-sm sm:text-base md:text-lg block mb-1">
+              શિક્ષણ થકી સમાજ સેવા
+            </p>
+            <span className="block text-white font-semibold tracking-widest text-xs sm:text-sm uppercase mb-3 px-3 py-1 border border-black/80 rounded-full bg-black/20 mx-auto">
               Established 1960
             </span>
-            <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-primary-foreground mb-6 leading-tight">MAHILA GRAM VIDHYAPITH,NARDIPUR<br />
-              <span className="text-gold text-3xl sm:text-4xl md:text-5xl lg:text-6xl inline-block mt-4">શિક્ષણ થકી સમાજ સેવા</span>
+            <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-primary-foreground mb-4 leading-tight">
+              MAHILA GRAM VIDHYAPITH, NARDIPUR
             </h1>
             <p className="text-primary-foreground/70 text-lg sm:text-xl max-w-2xl mx-auto mb-10">
               Nurturing minds, building futures. A legacy of academic excellence and holistic development for over six decades.
@@ -232,7 +235,7 @@ const Index = () => {
             </AnimatedSection>
             <AnimatedSection delay={0.2} direction="left">
               <div className="rounded-2xl overflow-hidden shadow-2xl">
-                <img src={campusImg} alt="Campus Life" className="w-full h-80 lg:h-[28rem] object-cover" />
+                <img src="IMAGES/CLASSROOM/college building .jpeg" alt="Campus Life" className="w-full h-80 lg:h-[28rem] object-cover" />
               </div>
             </AnimatedSection>
           </div>

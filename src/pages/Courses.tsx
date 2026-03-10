@@ -10,9 +10,9 @@ const allCourses = [
   { title: "Bachelor of Rural Science (BRS)", dept: "Mahila Gram Vidyapith", duration: "3 Years", level: "UG", desc: "Empowering rural communities through social work and academic excellence." },
   { title: "Secondary Education (General)", dept: "Bhagini Vidhyalaya", duration: "2 Years", level: "UG", desc: "Strong foundation for future academic and professional careers." },
   { title: "Primary Education Curriculum", dept: "Prayogik Prathamik Shala", duration: "5 Years", level: "UG", desc: "Innovative and experimental learning methods for primary education." },
-  { title: "BBA (General)", dept: "BRS", duration: "4 Years", level: "IT", desc: "Strong foundation for future academic and professional careers."},
-  { title: "MBA(General)", dept: "BRS", duration: "4 Years", level: "IT", desc: "Strong foundation for future academic and professional careers." },
-  { title: "BCA(General)", dept: "BRS", duration: "4 Years", level: "IT", desc: "Strong foundation for future academic and professional careers." },
+  { title: "BBA (General)", dept: "BRS", duration: "4 Years", level: "PG", desc: "Strong foundation for future academic and professional careers."},
+  { title: "MBA(General)", dept: "BRS", duration: "4 Years", level: "PG", desc: "Strong foundation for future academic and professional careers." },
+  { title: "BCA(General)", dept: "BRS", duration: "4 Years", level: "PG", desc: "Strong foundation for future academic and professional careers." },
 ];
 
 const depts = [

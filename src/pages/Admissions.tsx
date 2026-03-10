@@ -123,9 +123,8 @@ const Admissions = () => {
                   <label className="text-sm font-medium mb-2 block">Preferred Course *</label>
                   <select value={form.course} onChange={(e) => update("course", e.target.value)} className="w-full px-4 py-3 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-gold">
                     <option value="">Select a course</option>
-                    <option>ABC</option>
-                    <option>XYZ</option>
-                    <option>PQR</option>
+                    <option>Home Science Management</option>
+                    <option>Farm Management</option>
                     <option>MBA</option>
                     <option>BBA</option>
                     <option>BCA</option>

@@ -4,21 +4,20 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import heroBg from "../assets/hero-campus.jpg";
 
-const categories = ["All", "Campus", "Events", "Sports", "Labs", "Library"];
+const categories = ["All", "Campus", "Events", "Classroom", "Visit","Shram"];
 
 const images = [
-  { src: "https://images.unsplash.com/photo-1562774053-701939374585?w=600", cat: "Campus", alt: "College Building" },
-  { src: "https://images.unsplash.com/photo-1523050854058-8df90110c476?w=600", cat: "Events", alt: "Cultural Event" },
-  { src: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=600", cat: "Sports", alt: "Sports Ground" },
-  { src: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=600", cat: "Labs", alt: "Science Lab" },
-  { src: "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=600", cat: "Library", alt: "Library" },
-  { src: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=600", cat: "Campus", alt: "Campus Garden" },
-  { src: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=600", cat: "Events", alt: "Seminar Hall" },
-  { src: "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=600", cat: "Sports", alt: "Basketball Court" },
-  { src: "https://images.unsplash.com/photo-1588072432836-e10032774350?w=600", cat: "Labs", alt: "Computer Lab" },
-  { src: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=600", cat: "Library", alt: "Study Area" },
-  { src: "https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?w=600", cat: "Campus", alt: "Entrance" },
-  { src: "https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=600", cat: "Events", alt: "Graduation" },
+  { src: "IMAGES/EVENT/1.jpeg", cat: "Events", alt: "Cultural Event" },
+  { src: "IMAGES/CLASSROOM/STUDY AREA.jpeg", cat: "Classroom", alt: "Study Area" },
+  { src: "IMAGES/CLASSROOM/2.jpeg", cat: "Classroom", alt: "Class Room" },
+  { src: "IMAGES/CLASSROOM/1.jpeg", cat: "Classroom", alt: "Class Room " },
+  { src: "IMAGES/CLASSROOM/3.jpeg", cat: "Classroom", alt: "Class Room " },
+  { src: "IMAGES/VISIT/1.jpeg", cat: "Visit", alt: "Amul Dairy Visit " },
+  { src: "IMAGES/VISIT/2.jpeg", cat: "Visit", alt: "Amul Dairy Visit " },
+  { src: "IMAGES/VISIT/3.jpeg", cat: "Visit", alt: "Amul Dairy Visit " },
+  { src: "IMAGES/SHRAM/1.jpeg", cat: "Shram", alt: "Shram" },
+  { src: "IMAGES/SHRAM/2.jpeg", cat: "Shram", alt: "Shram" },
+  { src: "IMAGES/SHRAM/3.jpeg", cat: "Shram", alt: "Shram" }
 ];
 
 const Gallery = () => {
